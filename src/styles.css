@@ -1067,6 +1067,41 @@ h2 {
   outline-color: var(--blue);
   font-size: 11px;
 }
+.login-card .password-field {
+  margin: 0 0 12px;
+}
+.login-card .password-field label {
+  display: block;
+  margin: 0 0 5px;
+}
+.password-input-wrap {
+  position: relative;
+}
+.login-card .password-input-wrap input {
+  padding-right: 36px;
+}
+.password-visibility-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: 0;
+  background: transparent;
+  color: #777;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+.password-visibility-toggle:hover {
+  color: #333;
+}
+.password-visibility-toggle:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--blue);
+  outline-offset: 1px;
+}
 .login-card .button {
   width: 100%;
 }

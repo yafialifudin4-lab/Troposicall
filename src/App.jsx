@@ -14,6 +14,7 @@ import {
   CreditCard,
   Download,
   Eye,
+  EyeOff,
   LayoutDashboard,
   LockKeyhole,
   LogOut,
@@ -461,6 +462,7 @@ const cashierNav = [
 function LoginPage({ role, setRole, onLogin, onMenu }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const submit = async (event) => {
@@ -487,7 +489,21 @@ function LoginPage({ role, setRole, onLogin, onMenu }) {
           <form className="login-card" onSubmit={submit}>
             <h1><LockKeyhole size={15} /> {role === 'admin' ? 'Admin sign in' : 'Cashier sign in'}</h1>
             <label>Email<input type="email" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="name@example.com" /></label>
-            <label>Password<input type="password" required value={password} onChange={(event) => setPassword(event.target.value)} placeholder="••••••••" /></label>
+            <div className="password-field">
+              <label htmlFor="login-password">Password</label>
+              <div className="password-input-wrap">
+                <input id="login-password" type={showPassword ? 'text' : 'password'} required value={password} onChange={(event) => setPassword(event.target.value)} placeholder="••••••••" />
+                <button
+                  className="password-visibility-toggle"
+                  type="button"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-pressed={showPassword}
+                  onClick={() => setShowPassword((visible) => !visible)}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
             {error && <p className="inline-error" role="alert">{error}</p>}
             <button className="button button-red" type="submit" disabled={submitting}>{submitting ? 'Signing in…' : 'Sign in'}</button>
             <p className="login-preview">Sign in with your Supabase staff account.</p>
