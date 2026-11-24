@@ -500,7 +500,7 @@ function LoginPage({ role, setRole, onLogin, onMenu }) {
                   aria-pressed={showPassword}
                   onClick={() => setShowPassword((visible) => !visible)}
                 >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
                 </button>
               </div>
             </div>
