@@ -14,12 +14,13 @@ import {
   Trash2,
 } from 'lucide-react';
 
-export const categories = ['All', 'Makanan', 'Minuman', 'Makanan Tradisional'];
+export const categories = ['All', 'Makanan', 'Minuman', 'Makanan Tradisional', 'Bundling'];
 export const cashierCategories = [
   { value: 'All', label: 'All' },
   { value: 'Makanan Tradisional', label: 'Traditional Food' },
   { value: 'Makanan', label: 'Food' },
   { value: 'Minuman', label: 'Drinks' },
+  { value: 'Bundling', label: 'Bundling' },
 ];
 
 export const money = (amount) => `Rp${Number(amount || 0).toLocaleString('id-ID')}`;

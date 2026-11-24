@@ -185,6 +185,7 @@ function CustomerSite({
   clearCart,
   onStaff,
   onCreateOrder,
+  onSendReceipt,
   loading,
   loadError,
   storeOpen,
@@ -196,8 +197,10 @@ function CustomerSite({
   const [cartOpen, setCartOpen] = useState(false);
   const [stage, setStage] = useState('menu');
   const [customer, setCustomer] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
   const [payment, setPayment] = useState('Cash');
   const [receiptOrder, setReceiptOrder] = useState(null);
+  const [receiptEmailStatus, setReceiptEmailStatus] = useState('');
   const [notice, setNotice] = useState('');
   const [orderError, setOrderError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -242,7 +245,23 @@ function CustomerSite({
     setOrderError('');
     setSubmitting(true);
     try {
-      const order = await onCreateOrder({ channel: 'customer', customerName: customer, payment, items: cart });
+      const email = customerEmail.trim();
+      const order = await onCreateOrder({
+        channel: 'customer',
+        customerName: customer,
+        payment,
+        items: cart,
+      });
+      if (email) {
+        try {
+          await onSendReceipt(order, email);
+          setReceiptEmailStatus(`Receipt sent to ${email}.`);
+        } catch (error) {
+          setReceiptEmailStatus(`Order saved, but the receipt could not be emailed to ${email}: ${error.message}`);
+        }
+      } else {
+        setReceiptEmailStatus('');
+      }
       setReceiptOrder(order);
       setStage('complete');
     } catch (error) {
@@ -255,7 +274,9 @@ function CustomerSite({
     if (stage === 'complete') {
       clearCart();
       setCustomer('');
+      setCustomerEmail('');
       setReceiptOrder(null);
+      setReceiptEmailStatus('');
     }
     setStage('menu');
   };
@@ -344,20 +365,30 @@ function CustomerSite({
           </div>
           <form className="checkout-grid" onSubmit={placeOrder}>
             <div className="checkout-steps">
-              <section className="checkout-card">
-                <p className="eyebrow">★ STEP 1</p>
+              <section className="checkout-card">                
                 <h2>Who's this for?</h2>
                 <input value={customer} onChange={(event) => setCustomer(event.target.value)} placeholder="Your name" />
                 <small>Name helps us call you when your order is ready.</small>
               </section>
+              <section className="checkout-card">              
+                <h2>Email receipt (optional)</h2>
+                <input
+                  type="email"
+                  autoComplete="email"
+                  maxLength={254}
+                  value={customerEmail}
+                  onChange={(event) => setCustomerEmail(event.target.value)}
+                  placeholder="example@gmail.com"
+                  aria-label="Email address for receipt (optional)"
+                />
+                <small>Leave blank if you do not want the receipt emailed.</small>
+              </section>
               <section className="checkout-card">
-                <p className="eyebrow">★ STEP 2</p>
                 <h2>Order summary</h2>
                 <CartItems cart={cart} onChange={updateCart} />
                 <div className="checkout-total"><span>Total payment</span><strong>{money(total)}</strong></div>
               </section>
               <section className="checkout-card">
-                <p className="eyebrow">★ STEP 3</p>
                 <h2>How will you pay?</h2>
                 <div className="payment-options">
                   {['Cash', 'QRIS'].map((option) => (
@@ -393,6 +424,14 @@ function CustomerSite({
             <p className="eyebrow">ORDER RECEIVED</p>
             <h1>Thank you{customer ? `, ${customer}` : ''}!</h1>
             <p>Your order has been saved and sent to the booth.</p>
+            {receiptEmailStatus && (
+              <p
+                className={receiptEmailStatus.startsWith('Receipt sent') ? 'inline-notice' : 'inline-error'}
+                role={receiptEmailStatus.startsWith('Receipt sent') ? 'status' : 'alert'}
+              >
+                {receiptEmailStatus}
+              </p>
+            )}
             <div className="receipt-number">{receiptOrder?.id}</div>
             <div className="receipt-status"><span>Payment</span><Pill tone="blue">{payment}</Pill><Pill tone={statusTone(receiptOrder?.status)}>{receiptOrder?.status}</Pill></div>
             {payment === 'QRIS' && receiptOrder?.paymentStatus === 'Menunggu' && (
@@ -1308,6 +1347,15 @@ export default function App() {
     return order;
   };
 
+  const sendOrderReceipt = async (order, email) => {
+    if (!supabase) throw new Error('Supabase is not configured.');
+    const { data, error } = await supabase.functions.invoke('send-receipt', {
+      body: { transactionId: order.transactionId, email },
+    });
+    if (error) throw new Error(error.message || 'Email delivery failed.');
+    if (data?.sent !== true) throw new Error('The email service did not confirm delivery.');
+  };
+
   const changeOrderState = async (transactionId, changes) => {
     if (!supabase) throw new Error('Supabase is not configured.');
     await updateOrderState(supabase, transactionId, changes);
@@ -1400,6 +1448,7 @@ export default function App() {
       clearCart={clearCart}
       onStaff={() => setMode('login')}
       onCreateOrder={submitOrder}
+      onSendReceipt={sendOrderReceipt}
       loading={productsLoading}
       loadError={loadError}
       storeOpen={storeSettings.isOpen}
