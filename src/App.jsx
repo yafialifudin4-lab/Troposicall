@@ -331,7 +331,7 @@ function CustomerSite({
           <footer className="customer-footer">
             <Logo small />
             <p>Thank you! See you by the shore.</p>
-            <button className="text-button" onClick={onStaff}>Cashier &amp; admin sign in</button>
+            <button className="text-button" onClick={onStaff}>Copyright © 2026 TROPOSICAL. All rights reserved.</button>
           </footer>
         </>
       )}
