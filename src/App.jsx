@@ -34,6 +34,7 @@ import {
   Users,
   Clock3,
   X,
+  ArrowRight,
 } from 'lucide-react';
 import { supabase } from './lib/supabase.js';
 import {
@@ -124,7 +125,13 @@ function ReceiptPreview({ order, onBack }) {
     ? `${createdDate.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}, ${createdDate.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}`
     : order.time;
   const printReceipt = () => window.print();
-  const paymentStatus = order.paymentStatus === 'Lunas' ? 'PAID' : order.paymentStatus === 'Dibatalkan' ? 'CANCELLED' : 'WAITING';
+  const paymentStatus = order.status === 'Completed'
+    ? 'COMPLETE'
+    : order.paymentStatus === 'Lunas'
+      ? 'PAID'
+      : order.paymentStatus === 'Dibatalkan'
+        ? 'CANCELLED'
+        : 'WAITING';
 
   return (
     <div className="overlay receipt-preview-overlay" onMouseDown={(event) => { if (event.target === event.currentTarget) onBack(); }}>
@@ -1152,7 +1159,7 @@ function StaffApp({
       )}
       <Sidebar role={role} page={page} setPage={setPage} onLogout={onLogout} open={sidebarOpen} onToggle={(open) => setSidebarOpen(open)} staffName={staffName} staffEmail={staffEmail} onOpenCashier={onOpenCashier} />
       <section className="staff-main">
-        {cashier && <button className="staff-admin-back" onClick={onBackToAdmin}><ArrowLeft size={16} /> Back to admin</button>}
+        {cashier && <button className="staff-admin-back" onClick={onBackToAdmin}><ArrowRight size={16} /> Back to admin</button>}
         {(loadError || actionError) && <p className="inline-error staff-error" role="alert">{actionError || loadError}</p>}
         {content}
       </section>

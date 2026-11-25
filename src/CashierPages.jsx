@@ -131,6 +131,10 @@ export function PosPage({ products, cart, addToCart, changeQuantity, openOrder, 
   const filtered = products.filter((product) => product.name.toLowerCase().includes(search.toLowerCase()) && (category === 'All' || product.category === category));
   const place = async () => {
     if (!cart.length || submitting) return;
+    if (!customer.trim()) {
+      setError('Customer name is required.');
+      return;
+    }
     if (payment === 'Cash' && Number(paid) < total) {
       setError('Received cash must cover the transaction total.');
       return;
@@ -140,7 +144,7 @@ export function PosPage({ products, cart, addToCart, changeQuantity, openOrder, 
     try {
       const order = await onCreateOrder({
         channel: 'pos',
-        customerName: customer,
+        customerName: customer.trim(),
         payment,
         amountReceived: payment === 'Cash' ? Number(paid) : 0,
         items: cart,
@@ -187,7 +191,13 @@ export function PosPage({ products, cart, addToCart, changeQuantity, openOrder, 
         </section>
         <aside className="pos-order panel">
           <div className="pos-order-head"><h2>Order</h2><button className="text-button" onClick={() => cart.forEach((item) => changeQuantity(item.product, -999))}><Trash2 size={13} /> Clear</button></div>
-          <input value={customer} onChange={(event) => setCustomer(event.target.value)} placeholder="Customer name (optional)" />
+          <input
+            value={customer}
+            onChange={(event) => setCustomer(event.target.value)}
+            placeholder="Customer name (required)"
+            aria-label="Customer name"
+            required
+          />
           {cart.length ? <CartItems cart={cart} onChange={(product, amount) => amount > 0 ? addToCart(product) : changeQuantity(product, -1)} onRemove={(product) => changeQuantity(product, -999)} /> : <div className="empty-pos"><span>☼</span><strong>No items yet</strong><small>Tap a product to add it.</small></div>}
           <div className="pos-total"><div><span>Subtotal</span><span>{money(total)}</span></div><div className="checkout-total"><span>Total</span><strong>{money(total)}</strong></div></div>
           <div className="pos-payment-options">{['Cash', 'QRIS'].map((item) => <button key={item} className={`payment-option${payment === item ? ' selected' : ''}`} onClick={() => setPayment(item)}>{item === 'Cash' ? <Banknote size={16} /> : <QrCode size={16} />}{item}</button>)}</div>
