@@ -620,6 +620,23 @@ h2 {
   border-top: 1px solid var(--line);
   background: white;
 }
+.basket-customer-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.basket-customer-field input {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #e0d9ca;
+  border-radius: 10px;
+  background: white;
+  font: inherit;
+}
 .basket-summary > div:first-child {
   display: flex;
   justify-content: space-between;

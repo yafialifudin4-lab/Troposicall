@@ -150,6 +150,7 @@ function ReceiptPreview({ order, onBack }) {
           <div className="receipt-paper-info"><span>No.</span><strong>{order.id}</strong></div>
           <div className="receipt-paper-info"><span>Date</span><strong>{createdLabel}</strong></div>
           <div className="receipt-paper-info"><span>Type</span><strong>{order.customer === 'Walk-in' ? 'Walk-in' : 'Customer'}</strong></div>
+          <div className="receipt-paper-info"><span>Name</span><strong>{order.customer}</strong></div>
           <div className="receipt-paper-divider" />
           <div className="receipt-paper-lines">
             {(order.lines || []).map((line) => (
@@ -235,6 +236,12 @@ function CustomerSite({
   };
 
   const startCheckout = () => {
+    if (!customer.trim()) {
+      setOrderError('Customer name is required.');
+      return;
+    }
+    setCustomer(customer.trim());
+    setOrderError('');
     setCartOpen(false);
     setStage('checkout');
   };
@@ -242,13 +249,17 @@ function CustomerSite({
   const placeOrder = async (event) => {
     event.preventDefault();
     if (cart.length === 0 || !storeOpen || submitting) return;
+    if (!customer.trim()) {
+      setOrderError('Customer name is required.');
+      return;
+    }
     setOrderError('');
     setSubmitting(true);
     try {
       const email = customerEmail.trim();
       const order = await onCreateOrder({
         channel: 'customer',
-        customerName: customer,
+        customerName: customer.trim(),
         payment,
         items: cart,
       });
@@ -367,7 +378,7 @@ function CustomerSite({
             <div className="checkout-steps">
               <section className="checkout-card">                
                 <h2>Who's this for?</h2>
-                <input value={customer} onChange={(event) => setCustomer(event.target.value)} placeholder="Your name" />
+                <input value={customer} readOnly aria-label="Customer name" />
                 <small>Name helps us call you when your order is ready.</small>
               </section>              
               <section className="checkout-card">
@@ -460,6 +471,19 @@ function CustomerSite({
                 <div className="basket-summary">
                   <div><span>Subtotal</span><span>{money(total)}</span></div>
                   <div className="checkout-total"><span>Total</span><strong>{money(total)}</strong></div>
+                  <label className="basket-customer-field">
+                    <span>Customer name (required)</span>
+                    <input
+                      value={customer}
+                      onChange={(event) => {
+                        setCustomer(event.target.value);
+                        if (orderError) setOrderError('');
+                      }}
+                      placeholder="Enter customer name"
+                      required
+                    />
+                  </label>
+                  {orderError && <p className="inline-error" role="alert">{orderError}</p>}
                   <div className="basket-actions">
                     <button className="text-button" onClick={clearCart}>Clear cart</button>
                     <button className="button button-red" onClick={startCheckout}>Checkout · {money(total)}</button>
