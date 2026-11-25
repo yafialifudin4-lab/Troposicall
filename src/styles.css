@@ -3004,19 +3004,21 @@ td strong {
   border-radius: 13px;
   background: white;
   box-shadow: 0 5px 12px rgba(80, 57, 22, 0.1);
-  color: #303030;
-  font-family: "Courier New", monospace;
-  font-size: 9px;
+  color: #111;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.35;
 }
 .receipt-paper-58mm {
   max-width: 190px;
   padding: 12px 9px;
-  font-size: 8px;
+  font-size: 9px;
 }
 .receipt-paper-standard {
   max-width: 320px;
   padding: 20px 17px;
-  font-size: 10px;
+  font-size: 11px;
 }
 .receipt-paper > .brand-logo {
   flex-direction: column;
@@ -3056,9 +3058,10 @@ td strong {
   margin: 4px 0;
 }
 .receipt-paper-info span {
-  color: #777;
+  color: #333;
 }
 .receipt-paper-info strong {
+  font-weight: 700;
   text-align: right;
 }
 .receipt-paper-item {
@@ -3067,6 +3070,7 @@ td strong {
 .receipt-paper-item > strong {
   display: block;
   margin-bottom: 2px;
+  font-weight: 700;
 }
 .receipt-paper-item > div {
   display: flex;
@@ -3833,8 +3837,51 @@ td strong {
     border-radius: 0;
     padding: 4mm;
     box-shadow: none;
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
+    background: white !important;
+    color: #000 !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 10pt !important;
+    font-weight: 600 !important;
+    line-height: 1.35 !important;
+    print-color-adjust: economy;
+    -webkit-print-color-adjust: economy;
+  }
+  .receipt-paper *,
+  .receipt-paper-58mm *,
+  .receipt-paper-80mm * {
+    color: #000 !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-weight: 600 !important;
+  }
+  .receipt-paper strong,
+  .receipt-paper b,
+  .receipt-paper-58mm strong,
+  .receipt-paper-58mm b,
+  .receipt-paper-80mm strong,
+  .receipt-paper-80mm b {
+    font-weight: 700 !important;
+  }
+  .receipt-paper-divider,
+  .receipt-paper-58mm .receipt-paper-divider,
+  .receipt-paper-80mm .receipt-paper-divider {
+    border-top: 0.2mm solid #000;
+  }
+  .receipt-paper-info span,
+  .receipt-paper-58mm .receipt-paper-info span,
+  .receipt-paper-80mm .receipt-paper-info span {
+    color: #000 !important;
+  }
+  .receipt-tagline,
+  .receipt-paper-footer,
+  .receipt-paper-58mm .receipt-tagline,
+  .receipt-paper-58mm .receipt-paper-footer,
+  .receipt-paper-80mm .receipt-tagline,
+  .receipt-paper-80mm .receipt-paper-footer {
+    font-size: 9pt !important;
+  }
+  .receipt-qris-note {
+    border-color: #000 !important;
+    font-size: 8pt !important;
   }
   .receipt-paper-58mm {
     width: 58mm;
