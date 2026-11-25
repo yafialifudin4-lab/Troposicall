@@ -369,20 +369,7 @@ function CustomerSite({
                 <h2>Who's this for?</h2>
                 <input value={customer} onChange={(event) => setCustomer(event.target.value)} placeholder="Your name" />
                 <small>Name helps us call you when your order is ready.</small>
-              </section>
-              <section className="checkout-card">              
-                <h2>Email receipt (optional)</h2>
-                <input
-                  type="email"
-                  autoComplete="email"
-                  maxLength={254}
-                  value={customerEmail}
-                  onChange={(event) => setCustomerEmail(event.target.value)}
-                  placeholder="example@gmail.com"
-                  aria-label="Email address for receipt (optional)"
-                />
-                <small>Leave blank if you do not want the receipt emailed.</small>
-              </section>
+              </section>              
               <section className="checkout-card">
                 <h2>Order summary</h2>
                 <CartItems cart={cart} onChange={updateCart} />
@@ -433,7 +420,16 @@ function CustomerSite({
               </p>
             )}
             <div className="receipt-number">{receiptOrder?.id}</div>
-            <div className="receipt-status"><span>Payment</span><Pill tone="blue">{payment}</Pill><Pill tone={statusTone(receiptOrder?.status)}>{receiptOrder?.status}</Pill></div>
+            <div className={`receipt-status${payment === 'QRIS' && receiptOrder?.paymentStatus === 'Menunggu' ? ' receipt-status-qris' : ''}`}>
+              <div className="receipt-status-info">
+                <span>Payment</span><Pill tone="blue">{payment}</Pill><Pill tone={statusTone(receiptOrder?.status)}>{receiptOrder?.status}</Pill>
+              </div>
+              {payment === 'QRIS' && receiptOrder?.paymentStatus === 'Menunggu' && (
+                <a className="button button-outline button-small receipt-qris-download" href={qrisImage} download="QRIS-TROPOSICAL">
+                  <QrCode size={12} /> Unduh Qris
+                </a>
+              )}
+            </div>
             {payment === 'QRIS' && receiptOrder?.paymentStatus === 'Menunggu' && (
               <div className="qris-payment">
                 <p>Scan to pay, then show your payment proof to the cashier.</p>

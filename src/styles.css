@@ -953,6 +953,23 @@ h2 {
 .receipt-status > span {
   font-size: 9px;
 }
+.receipt-status-qris {
+  width: 100%;
+  justify-content: space-between;
+}
+.receipt-status-info {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.receipt-qris-download {
+  min-height: 28px;
+  flex: 0 0 auto;
+  gap: 4px;
+  padding: 0 7px;
+  font-size: 8px;
+  text-decoration: none;
+}
 .receipt-summary {
   width: 100%;
   padding: 5px 0;
