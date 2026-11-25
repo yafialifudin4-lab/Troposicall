@@ -163,7 +163,7 @@ function ReceiptPreview({ order, onBack }) {
           <div className="receipt-paper-total"><strong>TOTAL</strong><strong>{money(order.total)}</strong></div>
           <div className="receipt-paper-info"><span>Payment</span><strong>{order.payment}</strong></div>
           <div className="receipt-paper-info"><span>Status</span><strong>{paymentStatus}</strong></div>
-          {order.payment === 'QRIS' && <p className="receipt-qris-note">PROTOTYPE – SIMULATED QRIS, NOT A REAL PAYMENT</p>}
+  
           <div className="receipt-paper-divider" />
           <p className="receipt-paper-footer">Thank you! See you by the shore.<br />~ &nbsp; ~ &nbsp; ~</p>
         </article>
