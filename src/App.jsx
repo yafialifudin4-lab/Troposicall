@@ -912,9 +912,7 @@ function OrderModal({ order, close, onReceipt, updateOrder, qrisImage }) {
         </button>
         <div className="order-modal-actions">
           <button className="button button-outline button-small" onClick={onReceipt}><Receipt size={14} /> Receipt</button>
-          {order.status !== 'Completed' && order.status !== 'Cancelled' && (
-            <button className="button button-outline button-small cancel-order" onClick={cancelOrder} disabled={saving}><X size={14} /> Cancel order</button>
-          )}
+          <button className="button button-outline button-small cancel-order" onClick={cancelOrder} disabled={saving}><X size={14} /> Cancel order</button>
         </div>
         <div className="status-history">
           <strong>STATUS HISTORY</strong>

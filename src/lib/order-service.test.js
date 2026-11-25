@@ -182,6 +182,21 @@ test('updates payment and preparation statuses through the guarded RPC', async (
   assert.equal(request.params.p_order_status, null);
 });
 
+test('sends order cancellation through the guarded RPC', async () => {
+  let request;
+  await updateOrderState({
+    rpc: async (name, params) => {
+      request = { name, params };
+      return { data: { id: 'transaction-1', status: 'Dibatalkan', order_status: 'Baru' }, error: null };
+    },
+  }, 'transaction-1', { paymentStatus: 'Dibatalkan' });
+
+  assert.equal(request.name, 'update_order_state');
+  assert.equal(request.params.p_transaction_id, 'transaction-1');
+  assert.equal(request.params.p_payment_status, 'Dibatalkan');
+  assert.equal(request.params.p_order_status, null);
+});
+
 test('applies payment confirmation without prematurely advancing preparation', () => {
   const updated = applyOrderChanges({
     paymentStatus: 'Menunggu',
